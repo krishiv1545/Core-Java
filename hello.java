@@ -1,5 +1,7 @@
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -308,6 +310,74 @@ class RobotDog implements Animal, Robot {
     }
 }
 // RobotDog signed a contract to implement both Animal and Robot
+
+
+// ENCAPSULATION + getters/setters
+class StudentRecord {
+    private final String name;
+    private double marks = 0.0;
+    private char grade = 'F';
+
+    StudentRecord(String name) {
+        this.name = name;
+    }
+    // setter
+    void setMarks(Number score) {
+        double s = score.doubleValue();
+
+        if (s < 0 || s > 100) {
+            return;
+        }
+
+        this.marks = s;
+
+        this.grade = switch ((int) s / 10) {
+            case 10 -> 'S';
+            case 9  -> 'A';
+            case 8  -> 'B';
+            case 7  -> 'C';
+            case 6  -> 'D';
+            default -> 'F';
+        };
+    }
+    // getter
+    double getMarks() {
+        return marks;
+    }
+    // getter
+    char getGrade() {
+        return grade;
+    }
+
+    record Result(double marks, char grade) {}
+    // getter
+    Result getResult() {
+        return new Result(marks, grade);
+    }
+    // getter
+    String getName() {
+        return name;
+    }
+}
+// This is what 'record' compiles to:-
+
+// final class Result {
+//     private final double marks;
+//     private final char grade;
+
+//     public Result(double marks, char grade) {
+//         this.marks = marks;
+//         this.grade = grade;
+//     }
+
+//     public double marks() {
+//         return marks;
+//     }
+
+//     public char grade() {
+//         return grade;
+//     }
+// }
 
 
 // -------------------------------------------------------------------------------------
@@ -1186,7 +1256,7 @@ public class hello {
 
         // DEQUEUE (double ended queue)
         System.out.println("DEQUEUE");
-        List<String> dq = new LinkedList<>();
+        Deque<String> dq = new LinkedList<>();
         dq.addFirst("A");
         dq.addLast("B");
         dq.addLast("C");
@@ -1195,5 +1265,77 @@ public class hello {
         System.out.println(dq);
         dq.removeLast();
         System.out.println(dq);
+        // JAVA 21 onwards, List extends SequencedCollection which provide addFirst, addLast, etc.
+        List<String> dq2 = new LinkedList<>();
+        dq2.addFirst("D");
+        dq2.addLast("E");
+        dq2.addLast("F");
+        System.out.println(dq2);
+        dq2.removeFirst();
+        System.out.println(dq2);
+        dq2.removeLast();
+        System.out.println(dq2);
+        // Deque provides O(1) addFirst, addLast, removeFirst, removeLast
+        // List does not guarantee O(1) addFirst, addLast, removeFirst, removeLast (depends on how you implement it)
+
+        // Deque is the correct abstraction when you want queue / stack
+        // It defines behavior *and* performance expectations (O(1) add/remove at both ends)
+        // LinkedList is one possible implementation of Deque (ArrayDeque is often better)
+        Deque<String> dq3 = new ArrayDeque<>(); // cannot use List reference type
+        dq3.addFirst("G");
+        dq3.addLast("H");
+        dq3.addLast("I");
+        System.out.println(dq3);
+        dq3.removeFirst();
+        System.out.println(dq3);
+        dq3.removeLast();
+        System.out.println(dq3);
+        // List represents a general ordered sequence with positional access.=
+        // Since Java 21, List extends SequencedCollection and exposes first/last operations
+        // but these are convenience methods, not performance guarantees
+        // Use List when order/indexing matters; use Deque when end-based operations matter
+
+        
+        // ENCAPSULATION
+        // Encapsulation refers to an object controlling it's own internal state and how it's accessed/read
+        // It is not simply 'hide internals'
+        // 'Invalid state' of an object shouldn't exist
+
+        System.out.println("ENCAPSULATION");
+        // Integer marks
+        StudentRecord student1 = new StudentRecord("A");
+        student1.setMarks(100); // setter
+        System.out.println(student1.getName()); // getter
+        System.out.println("Marks: " + student1.getResult().marks());
+        System.out.println("Grade: " + student1.getResult().grade());
+        System.out.println("student1.getResult() :" + student1.getResult()); // student1.getResult() :Result[marks=100.0, grade=S]
+        // Result is a 'Nested Type'
+        StudentRecord.Result student1_result = student1.getResult();
+        System.out.println("student1_result.marks() :" + student1_result.marks());
+        System.out.println("student1_result.grade() :" + student1_result.grade());
+
+        // Invalid marks (ignored safely)
+        StudentRecord student2 = new StudentRecord("B");
+        student2.setMarks(101);   // rejected
+        System.out.println(student2.getName());
+        System.out.println("Marks: " + student2.getResult().marks());
+        System.out.println("Grade: " + student2.getResult().grade());
+        System.out.println("student2.getResult() :" + student2.getResult());
+
+        // Decimal marks
+        StudentRecord student3 = new StudentRecord("C");
+        student3.setMarks(65.5);
+        System.out.println(student3.getName());
+        System.out.println("Marks: " + student3.getResult().marks());
+        System.out.println("Grade: " + student3.getResult().grade());
+        System.out.println("student3.getResult() :" + student3.getResult());
+
+        // Slightly invalid decimal
+        StudentRecord student4 = new StudentRecord("D");
+        student4.setMarks(100.01); // rejected
+        System.out.println(student4.getName());
+        System.out.println("Marks: " + student4.getResult().marks());
+        System.out.println("Grade: " + student4.getResult().grade());
+        System.out.println("student4.getResult() :" + student4.getResult());
     }
 }
