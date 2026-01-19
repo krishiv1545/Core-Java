@@ -1,4 +1,4 @@
-// START FROM LINE 494
+// START FROM LINE 521
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -380,6 +380,33 @@ class StudentRecord {
 //         return grade;
 //     }
 // }
+
+
+abstract class PaymentGateway {
+    abstract void pay(int amount);
+
+    void log(String msg) {
+        System.out.println(msg);
+    }
+}
+
+
+abstract class Vehicle {
+    int speed;                    // STATE (data)
+
+    void accelerate() {           // IMPLEMENTED LOGIC
+        speed += 10;
+    }
+
+    abstract void fuel();         // UNKNOWN behavior
+}
+class Truck extends Vehicle {
+    @Override
+    void fuel() {                 // Abstract methods with unknown behaviour
+                                  // need to be implemented
+        System.out.println("Diesel");
+    }
+}
 
 
 // -------------------------------------------------------------------------------------
@@ -1339,5 +1366,28 @@ public class hello {
         System.out.println("Marks: " + student4.getResult().marks());
         System.out.println("Grade: " + student4.getResult().grade());
         System.out.println("student4.getResult() :" + student4.getResult());
+
+
+        // ABSTRACTION (Classes & Methods)
+        // (1) An abstract class represents a partial implementation of a concept, not an incomplete object
+        // cannot be instantiated (cannot create an object using abstract classes)
+        // PaymentGateway pg = new PaymentGateway(); // not allowed
+        // only used as a base for real thing (meant to be a parent-class for real things)
+        // (2) may contain state (state refers to data stored inside an object)
+        // interface create contract of methods, it cannot have fields; abstract class can have fields that children inherit
+        // (3) may contain implemented logic
+        // can contain logic, like methods, constructors, static (stuff), full logic
+        // abstract class Vehicle contains - state (speed)
+        //                                 - abstract method (fuel; unknown behaviour (similar to interface))
+        //                                 - method (accelerate, with implemented logic)
+        // (4) exists to be extended
+        Truck truck = new Truck();
+        System.out.println("Truck speed: " + truck.speed); // JVM initializes int to 0
+        truck.speed = 90;
+        System.out.println("Truck speed: " + truck.speed);
+        // abstract method (implemented logic in child class)
+        truck.fuel();
+        // implemented logic
+        truck.accelerate();
     }
 }
