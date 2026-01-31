@@ -409,6 +409,49 @@ class Truck extends Vehicle {
 }
 
 
+// try/catch/finally
+class TryCatchDemo {
+
+    static void validateAge(int x) {
+        System.out.println("Validating age: " + x);
+        if (x < 1) {
+            throw new IllegalArgumentException("age cannot be less than '1'");
+        }
+    }
+
+    static void tryCatchFinallyDemo(int x) {
+        try {
+            validateAge(x);
+            System.out.println("Validated age: " + x);
+        }
+        catch (IllegalArgumentException e) {
+            System.out.println("Caught exception: " + e.getMessage());
+        }
+        finally {
+            System.out.println("finally block ALWAYS executes");
+        }
+    }
+}
+
+
+// throw vs throws
+// THROWS:- compile time (CHECKED EXCEPTION)
+// throw:- run time (UNCHECKED EXCEPTION)
+class ThrowVsThrowsDemo {
+
+    static void validateAdultAge(int age) {
+        if (age < 18) {
+            throw new IllegalArgumentException("Age must be >= 18");
+        }
+    }
+
+    static void caller() {
+        // No throws needed because IllegalArgumentException is UNCHECKED
+        validateAdultAge(15);
+    }
+}
+
+
 // -------------------------------------------------------------------------------------
 // -------------------------------------------------------------------------------------
 
@@ -1389,5 +1432,11 @@ public class hello {
         truck.fuel();
         // implemented logic
         truck.accelerate();
+
+
+        // try/catch/finally
+        System.out.println("TRY/CATCH/FINALLY DEMO");
+        TryCatchDemo.tryCatchFinallyDemo(10);
+        TryCatchDemo.tryCatchFinallyDemo(0);
     }
 }
